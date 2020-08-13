@@ -16,8 +16,9 @@
 
 package lt.dvim.autogate
 
-import com.google.cloud.functions.{Context, RawBackgroundFunction}
 import java.util.logging.Logger
+
+import com.google.cloud.functions.{Context, RawBackgroundFunction}
 
 class AutoGate extends RawBackgroundFunction {
   val logger = Logger.getLogger(this.getClass().getName())
