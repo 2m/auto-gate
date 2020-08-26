@@ -21,11 +21,13 @@ import java.util.logging.Logger
 import ciris._
 import com.google.cloud.functions.{Context, RawBackgroundFunction}
 import lt.dvim.ciris.Hocon._
-import sttp.client._
 import sttp.client.httpclient.HttpClientSyncBackend
+import sttp.model.Uri
 import sttp.tapir._
 import sttp.tapir.client.sttp._
 import sttp.tapir.model._
+
+import lt.dvim.autogate.CirisDecoders._
 
 object AutoGate {
   val makeCall =
@@ -37,14 +39,20 @@ object AutoGate {
       .in(formBody[Map[String, String]])
       .out(stringBody)
 
-  val rootUri = uri"https://api.twilio.com"
-
-  case class Config(twilioSid: String, twilioToken: Secret[String], from: String, to: String, instructions: String)
-  final val config = {
+  case class Config(
+      twilioSid: String,
+      twilioToken: Secret[String],
+      twilioUri: Uri,
+      from: String,
+      to: String,
+      instructions: String
+  )
+  def config = {
     val hocon = hoconAt("auto-gate")
     loadConfig(
       hocon[String]("twilio-sid"),
       hocon[Secret[String]]("twilio-token"),
+      hocon[Uri]("twilio-uri"),
       hocon[String]("from"),
       hocon[String]("to"),
       hocon[String]("instructions")
@@ -54,22 +62,22 @@ object AutoGate {
   val logger = Logger.getLogger(this.getClass().getName())
   implicit val backend = HttpClientSyncBackend()
 
-  def openGate() = {
+  def openGate()(implicit config: Config) = {
     val auth = UsernamePassword(config.twilioSid, Some(config.twilioToken.value))
     val form = Map("To" -> config.to, "From" -> config.from, "Url" -> config.instructions)
     val response =
       makeCall
-        .toSttpRequest(rootUri)
+        .toSttpRequest(config.twilioUri)
         .apply((auth, config.twilioSid, form))
         .send()
     logger.info(s"Received status=${response.code} body=${response.body} from Twilio")
   }
 
-  def main(args: Array[String]): Unit = openGate()
+  def main(args: Array[String]): Unit = openGate()(config)
 }
 
 class AutoGate extends RawBackgroundFunction {
   import AutoGate._
 
-  override def accept(json: String, context: Context): Unit = openGate()
+  override def accept(json: String, context: Context): Unit = openGate()(config)
 }

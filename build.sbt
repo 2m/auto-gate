@@ -7,15 +7,19 @@ val Tapir = "0.16.15"
 val Circe = "0.13.0"
 
 libraryDependencies ++= Seq(
-  "com.google.cloud.functions"    % "functions-framework-api" % "1.0.2" % "provided",
+  "com.google.cloud.functions"    % "functions-framework-api" % "1.0.2"  % "provided",
   "com.softwaremill.sttp.tapir"  %% "tapir-core"              % Tapir,
   "com.softwaremill.sttp.tapir"  %% "tapir-json-circe"        % Tapir,
   "com.softwaremill.sttp.tapir"  %% "tapir-sttp-client"       % Tapir,
   "com.softwaremill.sttp.client" %% "httpclient-backend"      % "2.2.5",
   "is.cir"                       %% "ciris-core"              % "0.13.0-RC1",
   "lt.dvim.ciris-hocon"          %% "ciris-hocon"             % "0.2",
-  "io.circe"                     %% "circe-core"              % Circe
+  "io.circe"                     %% "circe-core"              % Circe,
+  "org.scalameta"                %% "munit"                   % "0.7.11" % Test,
+  "com.typesafe.akka"            %% "akka-stream"             % "2.6.8"  % Test
 )
+
+testFrameworks += new TestFramework("munit.Framework")
 
 scalafmtOnCompile := true
 scalafixOnCompile := true
