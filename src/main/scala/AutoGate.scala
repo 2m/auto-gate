@@ -18,11 +18,58 @@ package lt.dvim.autogate
 
 import java.util.logging.Logger
 
+import ciris._
 import com.google.cloud.functions.{Context, RawBackgroundFunction}
+import lt.dvim.ciris.Hocon._
+import sttp.client._
+import sttp.client.httpclient.HttpClientSyncBackend
+import sttp.tapir._
+import sttp.tapir.client.sttp._
+import sttp.tapir.model._
+
+object AutoGate {
+  val makeCall =
+    endpoint.post
+      .in(auth.basic[UsernamePassword])
+      .in("2010-04-01" / "Accounts")
+      .in(path[String]("accountId"))
+      .in("Calls.json")
+      .in(formBody[Map[String, String]])
+      .out(stringBody)
+
+  val rootUri = uri"https://api.twilio.com"
+
+  case class Config(twilioSid: String, twilioToken: Secret[String], from: String, to: String, instructions: String)
+  final val config = {
+    val hocon = hoconAt("auto-gate")
+    loadConfig(
+      hocon[String]("twilio-sid"),
+      hocon[Secret[String]]("twilio-token"),
+      hocon[String]("from"),
+      hocon[String]("to"),
+      hocon[String]("instructions")
+    )(Config.apply).orThrow()
+  }
+
+  val logger = Logger.getLogger(this.getClass().getName())
+  implicit val backend = HttpClientSyncBackend()
+
+  def openGate() = {
+    val auth = UsernamePassword(config.twilioSid, Some(config.twilioToken.value))
+    val form = Map("To" -> config.to, "From" -> config.from, "Url" -> config.instructions)
+    val response =
+      makeCall
+        .toSttpRequest(rootUri)
+        .apply((auth, config.twilioSid, form))
+        .send()
+    logger.info(s"Received status=${response.code} body=${response.body} from Twilio")
+  }
+
+  def main(args: Array[String]): Unit = openGate()
+}
 
 class AutoGate extends RawBackgroundFunction {
-  val logger = Logger.getLogger(this.getClass().getName())
+  import AutoGate._
 
-  override def accept(json: String, context: Context): Unit =
-    logger.info(s"Inside a function. Json: $json")
+  override def accept(json: String, context: Context): Unit = openGate()
 }
