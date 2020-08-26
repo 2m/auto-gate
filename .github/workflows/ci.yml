@@ -14,8 +14,8 @@ jobs:
     strategy:
       fail-fast: false
     steps:
-    - uses: actions/checkout
-    - uses: olafurpg/setup-scala
+    - uses: actions/checkout@v1
+    - uses: olafurpg/setup-scala@v7
       with:
         java-version: adopt@1.11
     - run: sbt ";scalafixAll --check"
@@ -23,7 +23,7 @@ jobs:
     - run: sbt scalafmtSbtCheck
     - run: sbt headerCheckAll
     - name: yaml-lint
-      uses: ibiqlik/action-yamllint
+      uses: ibiqlik/action-yamllint@v1.0.0
 
   test:
     name: Compile and test
@@ -31,8 +31,8 @@ jobs:
     strategy:
       fail-fast: false
     steps:
-    - uses: actions/checkout
-    - uses: olafurpg/setup-scala
+    - uses: actions/checkout@v1
+    - uses: olafurpg/setup-scala@v7
       with:
         java-version: adopt@1.11
     - run: sbt test
