@@ -3,7 +3,7 @@ name := "auto-gate"
 description := "Uses Twilio to make a call to garage opening number"
 
 scalaVersion := "2.13.3"
-val Tapir = "0.16.15"
+val Tapir = "0.16.16"
 val Circe = "0.13.0"
 
 libraryDependencies ++= Seq(

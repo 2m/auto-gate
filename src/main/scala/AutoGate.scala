@@ -25,18 +25,22 @@ import sttp.client.httpclient.HttpClientSyncBackend
 import sttp.model.Uri
 import sttp.tapir._
 import sttp.tapir.client.sttp._
+import sttp.tapir.generic.Configuration
 import sttp.tapir.model._
 
 import lt.dvim.autogate.CirisDecoders._
 
 object AutoGate {
+  case class Request(to: String, from: String, url: String)
+  implicit val requestConfiguration: Configuration = Configuration(_.capitalize)
+
   val makeCall =
     endpoint.post
       .in(auth.basic[UsernamePassword])
       .in("2010-04-01" / "Accounts")
       .in(path[String]("accountId"))
       .in("Calls.json")
-      .in(formBody[Map[String, String]])
+      .in(formBody[Request])
       .out(stringBody)
 
   case class Config(
@@ -64,7 +68,7 @@ object AutoGate {
 
   def openGate()(implicit config: Config) = {
     val auth = UsernamePassword(config.twilioSid, Some(config.twilioToken.value))
-    val form = Map("To" -> config.to, "From" -> config.from, "Url" -> config.instructions)
+    val form = Request(config.to, config.from, config.instructions)
     val response =
       makeCall
         .toSttpRequest(config.twilioUri)
