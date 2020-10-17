@@ -73,6 +73,7 @@ object AutoGate {
       makeCall
         .toSttpRequest(config.twilioUri)
         .apply((auth, config.twilioSid, form))
+        .header("User-Agent", "2m/auto-gate")
         .send()
     logger.info(s"Received status=${response.code} body=${response.body} from Twilio")
   }
