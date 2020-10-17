@@ -45,10 +45,10 @@ class AutoGateSuite extends FunSuite with Fixtures {
                        |Host: localhost:${server.port}
                        |HTTP2-Settings: AAEAAEAAAAIAAAABAAMAAABkAAQBAAAAAAUAAEAA
                        |Upgrade: h2c
-                       |User-Agent: Java-http-client/14.0.1
                        |Accept-Encoding: gzip, deflate
                        |Authorization: Basic dHdpbGlvLXNpZDp0d2lsaW8tdG9rZW4=
                        |Content-Type: application/x-www-form-urlencoded
+                       |User-Agent: 2m/auto-gate
                        |
                        |To=to&From=from&Url=instructions
                        |""".stripMargin
