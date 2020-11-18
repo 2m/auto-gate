@@ -15,7 +15,7 @@ jobs:
       fail-fast: false
     steps:
     - uses: actions/checkout@v1
-    - uses: olafurpg/setup-scala@v7
+    - uses: olafurpg/setup-scala@v10
       with:
         java-version: adopt@1.14
     - run: sbt ";scalafixAll --check"
@@ -32,7 +32,7 @@ jobs:
       fail-fast: false
     steps:
     - uses: actions/checkout@v1
-    - uses: olafurpg/setup-scala@v7
+    - uses: olafurpg/setup-scala@v10
       with:
         java-version: adopt@1.14
     - run: sbt test
