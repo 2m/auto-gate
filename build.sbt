@@ -15,7 +15,7 @@ libraryDependencies ++= Seq(
   "is.cir"                       %% "ciris-core"              % "0.13.0-RC1",
   "lt.dvim.ciris-hocon"          %% "ciris-hocon"             % "0.2",
   "io.circe"                     %% "circe-core"              % Circe,
-  "org.scalameta"                %% "munit"                   % "0.7.18" % Test,
+  "org.scalameta"                %% "munit"                   % "0.7.19" % Test,
   "com.typesafe.akka"            %% "akka-stream"             % "2.6.10" % Test
 )
 
