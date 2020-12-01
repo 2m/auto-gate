@@ -7,7 +7,7 @@ val Tapir = "0.16.16"
 val Circe = "0.13.0"
 
 libraryDependencies ++= Seq(
-  "com.google.cloud.functions"    % "functions-framework-api" % "1.0.2"  % "provided",
+  "com.google.cloud.functions"    % "functions-framework-api" % "1.0.3"  % "provided",
   "com.softwaremill.sttp.tapir"  %% "tapir-core"              % Tapir,
   "com.softwaremill.sttp.tapir"  %% "tapir-json-circe"        % Tapir,
   "com.softwaremill.sttp.tapir"  %% "tapir-sttp-client"       % Tapir,
