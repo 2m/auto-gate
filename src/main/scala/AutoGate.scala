@@ -21,22 +21,23 @@ import java.util.logging.Logger
 import ciris._
 import com.google.cloud.functions.{Context, RawBackgroundFunction}
 import lt.dvim.ciris.Hocon._
-import sttp.client.httpclient.HttpClientSyncBackend
+import sttp.client3.httpclient.HttpClientSyncBackend
 import sttp.model.Uri
 import sttp.tapir._
 import sttp.tapir.client.sttp._
 import sttp.tapir.generic.Configuration
+import sttp.tapir.generic.auto._
 import sttp.tapir.model._
 
 import lt.dvim.autogate.CirisDecoders._
 
 object AutoGate {
   case class Request(to: String, from: String, url: String)
-  implicit val requestConfiguration: Configuration = Configuration(_.capitalize)
+  implicit val requestConfiguration: Configuration = Configuration(_.capitalize, None)
 
   val makeCall =
     endpoint.post
-      .in(auth.basic[UsernamePassword])
+      .in(auth.basic[UsernamePassword]())
       .in("2010-04-01" / "Accounts")
       .in(path[String]("accountId"))
       .in("Calls.json")
@@ -64,17 +65,17 @@ object AutoGate {
   }
 
   val logger = Logger.getLogger(this.getClass().getName())
-  implicit val backend = HttpClientSyncBackend()
+  val backend = HttpClientSyncBackend()
 
   def openGate()(implicit config: Config) = {
     val auth = UsernamePassword(config.twilioSid, Some(config.twilioToken.value))
     val form = Request(config.to, config.from, config.instructions)
     val response =
-      makeCall
-        .toSttpRequest(config.twilioUri)
+      SttpClientInterpreter
+        .toRequest(makeCall, config.twilioUri)
         .apply((auth, config.twilioSid, form))
         .header("User-Agent", "2m/auto-gate")
-        .send()
+        .send(backend)
     logger.info(s"Received status=${response.code} body=${response.body} from Twilio")
   }
 

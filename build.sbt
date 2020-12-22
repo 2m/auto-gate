@@ -3,20 +3,20 @@ name := "auto-gate"
 description := "Uses Twilio to make a call to garage opening number"
 
 scalaVersion := "2.13.3"
-val Tapir = "0.16.16"
+val Tapir = "0.17.1"
 val Circe = "0.13.0"
 
 libraryDependencies ++= Seq(
-  "com.google.cloud.functions"    % "functions-framework-api" % "1.0.3"  % "provided",
-  "com.softwaremill.sttp.tapir"  %% "tapir-core"              % Tapir,
-  "com.softwaremill.sttp.tapir"  %% "tapir-json-circe"        % Tapir,
-  "com.softwaremill.sttp.tapir"  %% "tapir-sttp-client"       % Tapir,
-  "com.softwaremill.sttp.client" %% "httpclient-backend"      % "2.2.9",
-  "is.cir"                       %% "ciris-core"              % "0.13.0-RC1",
-  "lt.dvim.ciris-hocon"          %% "ciris-hocon"             % "0.2",
-  "io.circe"                     %% "circe-core"              % Circe,
-  "org.scalameta"                %% "munit"                   % "0.7.20" % Test,
-  "com.typesafe.akka"            %% "akka-stream"             % "2.6.10" % Test
+  "com.google.cloud.functions"     % "functions-framework-api" % "1.0.3"  % "provided",
+  "com.softwaremill.sttp.tapir"   %% "tapir-core"              % Tapir,
+  "com.softwaremill.sttp.tapir"   %% "tapir-json-circe"        % Tapir,
+  "com.softwaremill.sttp.tapir"   %% "tapir-sttp-client"       % Tapir,
+  "com.softwaremill.sttp.client3" %% "httpclient-backend"      % "3.0.0-RC13",
+  "is.cir"                        %% "ciris-core"              % "0.13.0-RC1",
+  "lt.dvim.ciris-hocon"           %% "ciris-hocon"             % "0.2",
+  "io.circe"                      %% "circe-core"              % Circe,
+  "org.scalameta"                 %% "munit"                   % "0.7.20" % Test,
+  "com.typesafe.akka"             %% "akka-stream"             % "2.6.10" % Test
 )
 
 testFrameworks += new TestFramework("munit.Framework")
