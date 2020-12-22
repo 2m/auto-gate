@@ -29,7 +29,7 @@ import akka.util.ByteString
 
 import ciris.Secret
 import munit.FunSuite
-import sttp.client._
+import sttp.client3._
 
 import lt.dvim.autogate.AutoGate._
 
