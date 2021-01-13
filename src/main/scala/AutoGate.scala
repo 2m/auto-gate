@@ -72,7 +72,7 @@ object AutoGate {
     val form = Request(config.to, config.from, config.instructions)
     val response =
       SttpClientInterpreter
-        .toRequest(makeCall, config.twilioUri)
+        .toRequest(makeCall, Some(config.twilioUri))
         .apply((auth, config.twilioSid, form))
         .header("User-Agent", "2m/auto-gate")
         .send(backend)
