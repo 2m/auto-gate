@@ -17,6 +17,7 @@
 package lt.dvim.autogate
 
 import scala.concurrent.Future
+import scala.util.Success
 
 import akka.actor.ActorSystem
 import akka.stream.scaladsl.Flow
@@ -65,9 +66,17 @@ trait Fixtures { self: munit.FunSuite =>
     setup = { _ =>
       implicit val sys = ActorSystem()
       import sys.dispatcher
-      val serverSink = Sink.fold[ByteString, ByteString](ByteString.empty)(_ ++ _)
-      val serverFlow =
-        Flow.fromSinkAndSourceMat(serverSink, Source.single(ByteString("HTTP/1.1 200 OK\r\n\r\n")))(Keep.left)
+      val (responsePromise, serverSource) = Source.maybe[ByteString].preMaterialize()
+      val sendResponse =
+        Sink.foreach[ByteString] { _ =>
+          responsePromise.tryComplete(Success(Some(ByteString("HTTP/1.1 200 OK\r\n\r\n"))))
+          ()
+        }
+      val serverSink =
+        Flow[ByteString]
+          .alsoTo(sendResponse)
+          .toMat(Sink.fold[ByteString, ByteString](ByteString.empty)(_ ++ _))(Keep.right)
+      val serverFlow = Flow.fromSinkAndSourceMat(serverSink, serverSource)(Keep.left)
       val (binding, connection) = Tcp().bind("localhost", 0).toMat(Sink.head)(Keep.both).run()
       val result = connection.flatMap(_.handleWith(serverFlow)).map(_.utf8String)
       binding.map(binding => TcpServer(binding, result, binding.localAddress.getPort(), sys))
