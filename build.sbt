@@ -2,7 +2,7 @@ organization := "lt.dvim.auto-gate"
 name := "auto-gate"
 description := "Uses Twilio to make a call to garage opening number"
 
-scalaVersion := "2.13.5"
+scalaVersion := "2.13.6"
 val Tapir = "0.18.0-M10"
 val Circe = "0.13.0"
 
