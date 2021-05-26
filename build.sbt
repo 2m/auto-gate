@@ -4,7 +4,7 @@ description := "Uses Twilio to make a call to garage opening number"
 
 scalaVersion := "2.13.6"
 val Tapir = "0.18.0-M11"
-val Circe = "0.14.0"
+val Circe = "0.14.1"
 
 libraryDependencies ++= Seq(
   "com.google.cloud.functions"     % "functions-framework-api" % "1.0.4"  % "provided",
