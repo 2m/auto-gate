@@ -16,7 +16,7 @@ libraryDependencies ++= Seq(
   "lt.dvim.ciris-hocon"           %% "ciris-hocon"             % "0.2.1",
   "io.circe"                      %% "circe-core"              % Circe,
   "org.scalameta"                 %% "munit"                   % "0.7.26" % Test,
-  "com.typesafe.akka"             %% "akka-stream"             % "2.6.14" % Test
+  "com.typesafe.akka"             %% "akka-stream"             % "2.6.15" % Test
 )
 
 testFrameworks += new TestFramework("munit.Framework")
