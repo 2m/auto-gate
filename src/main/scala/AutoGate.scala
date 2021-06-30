@@ -71,7 +71,7 @@ object AutoGate {
     val auth = UsernamePassword(config.twilioSid, Some(config.twilioToken.value))
     val form = Request(config.to, config.from, config.instructions)
     val response =
-      SttpClientInterpreter
+      SttpClientInterpreter()
         .toRequest(makeCall, Some(config.twilioUri))
         .apply((auth, config.twilioSid, form))
         .header("User-Agent", "2m/auto-gate")
