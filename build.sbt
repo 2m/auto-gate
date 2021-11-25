@@ -13,7 +13,7 @@ libraryDependencies ++= Seq(
   "com.softwaremill.sttp.tapir"   %% "tapir-sttp-client"       % Tapir,
   "com.softwaremill.sttp.client3" %% "httpclient-backend"      % "3.3.17",
   "is.cir"                        %% "ciris-core"              % "0.13.0-RC1",
-  "lt.dvim.ciris-hocon"           %% "ciris-hocon"             % "0.2.1",
+  "lt.dvim.ciris-hocon"           %% "ciris-hocon"             % "1.0.1",
   "io.circe"                      %% "circe-core"              % Circe,
   "org.scalameta"                 %% "munit"                   % "0.7.29" % Test,
   "com.typesafe.akka"             %% "akka-stream"             % "2.6.17" % Test
